@@ -1,0 +1,43 @@
+class GestorDeTareas:
+    def __init__(self):
+        self.tareas = []
+
+    def agregar_tarea(self, nombre):
+        nueva = Tarea(nombre)
+        self.tareas.append(nueva)
+        print(f"Tarea '{nombre}' agregada.")
+
+    def mostrar_tareas(self):
+        from rich.table import Table
+        from rich.console import Console
+
+        table = Table(title="Tareas")
+        table.add_column("Nombre")
+        table.add_column("Estado")
+
+        for tarea in self.tareas:
+            table.add_row(tarea.nombre, tarea.estado)
+
+        console = Console()
+        console.print(table)
+class Interfaz:
+    def __init__(self):
+        self.gestor = GestorDeTareas()
+
+    def iniciar(self):
+        while True:
+            try:
+                print("\n1. Agregar tarea\n2. Ver tareas\n3. Salir")
+                opcion = input("Elige una opción: ")
+
+                if opcion == "1":
+                    nombre = input("Nombre de la tarea: ")
+                    self.gestor.agregar_tarea(nombre)
+                elif opcion == "2":
+                    self.gestor.mostrar_tareas()
+                elif opcion == "3":
+                    break
+                else:
+                    print("Opción no válida.")
+            except Exception as e:
+                print(f"⚠️ Error: {e}")
