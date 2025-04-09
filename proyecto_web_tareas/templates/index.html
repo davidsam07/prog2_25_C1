@@ -2,29 +2,51 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Gestor de Tareas</title>
-    <!-- Bootstrap CSS vía CDN -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-          integrity="sha384-MD6bBk6jMJzqz1HlbG+FkA2BjN2pdiY2kOqf2aCW4nNSQlJfHuSCtg/X7+Rl5IvF" crossorigin="anonymous">
+    <title>Gestión de Tareas</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
 <div class="container mt-4">
-    <h1 class="mb-4">Gestor de Tareas</h1>
-    <form action="/crear" method="post" class="mb-3">
-        <input type="text" name="titulo" class="form-control" placeholder="Título de la tarea">
-        <button type="submit" class="btn btn-primary mt-2">Crear Tarea</button>
+    <h1>Gestión de Tareas</h1>
+
+    <!-- Formulario para crear tarea -->
+    <form method="post" action="/crear" class="form-inline mb-3">
+        <input type="text" name="titulo" class="form-control mr-2" placeholder="Título" required>
+        <input type="text" name="descripcion" class="form-control mr-2" placeholder="Descripción">
+        <input type="text" name="fecha" class="form-control mr-2" placeholder="YYYY-MM-DD" value="2025-05-30">
+        <select name="prioridad" class="form-control mr-2">
+            <option value="1">Alta</option>
+            <option value="2" selected>Media</option>
+            <option value="3">Baja</option>
+        </select>
+        <input type="text" name="usuario" class="form-control mr-2" placeholder="Usuario asignado">
+        <button type="submit" class="btn btn-primary">Crear</button>
     </form>
-    <h2>Tareas</h2>
+
+    <!-- Botón para ver filtradas o modificadas -->
+    <a href="/filtrar?estado=pendiente" class="btn btn-sm btn-info mb-2">Ver Pendientes</a>
+    <a href="/filtrar?estado=en_progreso" class="btn btn-sm btn-info mb-2">Ver En Progreso</a>
+    <a href="/filtrar?estado=completada" class="btn btn-sm btn-info mb-2">Ver Completadas</a>
+
+    <!-- Lista de tareas -->
     <ul class="list-group">
-        {% for tarea in tareas %}
-            <li class="list-group-item">{{ tarea }}</li>
-        {% endfor %}
+    {% for t in tareas %}
+      <li class="list-group-item">
+        <strong>{{ t.id_tarea }}:</strong> {{ t }}
+        <br/>
+        {% if t.usuario_asignado %}
+          <em>Asignada a: {{ t.usuario_asignado }}</em>
+        {% endif %}
+        <br/>
+        <a href="/cambiar_estado?id={{ t.id_tarea }}&estado=en_progreso" class="btn btn-sm btn-warning">En Progreso</a>
+        <a href="/cambiar_estado?id={{ t.id_tarea }}&estado=completada" class="btn btn-sm btn-success">Completar</a>
+        <a href="/modificar?id={{ t.id_tarea }}" class="btn btn-sm btn-secondary">Modificar</a>
+        <a href="/asignar?id={{ t.id_tarea }}&usuario=Maria" class="btn btn-sm btn-info">Asignar a Maria</a>
+      </li>
+    {% endfor %}
     </ul>
 </div>
-<!-- Bootstrap JS y dependencias -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-LtrjvnR4/JrqWmkHgfOoXwRAIpDIlI+nePUzh2+1FD7/jd6Gsab3m/j4ycKGK5mZ" crossorigin="anonymous"></script>
 </body>
 </html>
