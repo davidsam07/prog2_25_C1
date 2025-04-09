@@ -97,5 +97,5 @@ if __name__ == "__main__":
 @app.route("/")
 def index():
     tareas = gestor.listar_tareas()
-    return render_template("indice.html", tareas=tareas)
+    return render_template("index.html", tareas=tareas)
 #Esto sirve para llamar al documento que le da forma y diseño a la página
