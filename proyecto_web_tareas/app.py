@@ -104,3 +104,16 @@ def eliminar():
     id_tarea = int(id_str)
     gestor.eliminar_tarea(id_tarea)
     return redirect(url_for("index"))
+
+@app.route("/", methods=["GET", "POST"])
+def index():
+    if request.method == "POST":
+        titulo = request.form["titulo"]
+        descripcion = request.form.get("descripcion", "")
+        fecha = request.form["fecha"]
+        prioridad = int(request.form.get("prioridad", 2))
+        usuario = request.form.get("usuario", None)
+        gestor.crear_tarea(titulo, descripcion, fecha, prioridad, usuario_asignado=usuario)
+        return redirect(url_for("index"))
+    tareas = gestor.listar_tareas()
+    return render_template("index.html", tareas=tareas)
