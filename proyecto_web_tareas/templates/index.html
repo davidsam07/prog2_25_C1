@@ -50,3 +50,16 @@
 </div>
 </body>
 </html>
+<li class="list-group-item">
+  <strong>{{ t.id_tarea }}:</strong> {{ t }}
+  <br>
+  <em>Asignada a: {{ t.usuario_asignado }}</em>
+  <br>
+  <a href="/cambiar_estado?id={{ t.id_tarea }}&estado=en_progreso" class="btn btn-sm btn-warning">En Progreso</a>
+  <a href="/cambiar_estado?id={{ t.id_tarea }}&estado=completada" class="btn btn-sm btn-success">Completar</a>
+  <a href="/modificar?id={{ t.id_tarea }}" class="btn btn-sm btn-secondary">Modificar</a>
+  <a href="/asignar?id={{ t.id_tarea }}&usuario=Maria" class="btn btn-sm btn-info">Asignar a Maria</a>
+
+  <!-- Nuevo botón "Eliminar" -->
+  <a href="/eliminar?id={{ t.id_tarea }}" class="btn btn-sm btn-danger">Eliminar</a>
+</li>

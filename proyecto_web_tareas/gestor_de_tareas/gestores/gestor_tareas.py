@@ -88,3 +88,14 @@ class GestorDeTareas:
         Devuelve una lista ordenada por prioridad (se usa __lt__ en Tarea).
         """
         return sorted(self.tareas)
+    @log_funcion
+    def eliminar_tarea(self, id_tarea: int) -> bool:
+        """
+        Elimina la tarea con el ID especificado.
+        Devuelve True si se ha eliminado, False en caso contrario.
+        """
+        for i, t in enumerate(self.tareas):
+            if t.id_tarea == id_tarea:
+                del self.tareas[i]
+                return True
+        return False
