@@ -1,8 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for
-from gestor_de_tareas.gestores.gestor_tareas import GestorDeTareas, EstadoTarea
 
-from flask import Flask, render_template, request, redirect, url_for
-from gestor_de_tareas import GestorDeTareas, EstadoTarea  # ajustá esto según tu estructura
+from gestor_de_tareas.gestores.gestor_tareas import GestorDeTareas
+from gestor_de_tareas.clases.tarea import EstadoTarea
+
 
 app = Flask(__name__)
 gestor = GestorDeTareas()
