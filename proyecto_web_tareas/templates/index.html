@@ -34,11 +34,39 @@
     <h1 class="titulo-pagina">📝 Gestión de Tareas</h1>
 
     <!-- Imagen decorativa -->
-    <img src="{{ url_for('static', filename='img/OIP(1).jpg') }}" alt="Trabajo en equipo" class="imagen-hero">
+    <img src="{{ url_for('static', filename='img/equipo.jpg') }}" alt="Trabajo en equipo" class="imagen-hero">
 
-    <!-- Botón para crear tarea -->
-    <div class="text-end mb-4">
-        <a href="/crear" class="btn btn-success">➕ Crear nueva tarea</a>
+    <!-- Formulario para crear una nueva tarea -->
+    <div class="card mb-5">
+        <div class="card-body">
+            <h5 class="card-title">Crear nueva tarea</h5>
+            <form method="post" action="/">
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <input type="text" class="form-control" name="titulo" placeholder="Título" required>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <input type="text" class="form-control" name="descripcion" placeholder="Descripción">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <input type="date" class="form-control" name="fecha" required>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <select class="form-select" name="prioridad">
+                            <option value="1">Alta</option>
+                            <option value="2">Media</option>
+                            <option value="3">Baja</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <input type="text" class="form-control" name="usuario" placeholder="Usuario asignado">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <button type="submit" class="btn btn-success w-100">Crear</button>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 
     <!-- Lista de tareas -->
