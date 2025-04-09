@@ -94,11 +94,6 @@ def asignar():
 if __name__ == "__main__":
     app.run(debug=True)
 
-@app.route("/")
-def index():
-    tareas = gestor.listar_tareas()
-    return render_template("indice.html", tareas=tareas)
-#Esto sirve para llamar al documento que le da forma y diseño a la página
 @app.route("/eliminar")
 def eliminar():
     # Recogemos el parámetro "id" de la URL
