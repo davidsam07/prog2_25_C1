@@ -4,7 +4,7 @@ import hashlib
 
 app = Flask(__name__)
 
-app.config["JWT_SECRET_KEY"] = "super-secret"  # Cambia esta clave por una más segura
+app.config["JWT_SECRET_KEY"] = "bocatalomoya"  # Cambia esta clave por una más segura
 jwt = JWTManager(app)
 
 # Base de datos simulada para los usuarios y tareas
