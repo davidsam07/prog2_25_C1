@@ -99,3 +99,13 @@ def index():
     tareas = gestor.listar_tareas()
     return render_template("indice.html", tareas=tareas)
 #Esto sirve para llamar al documento que le da forma y diseño a la página
+@app.route("/eliminar")
+def eliminar():
+    # Recogemos el parámetro "id" de la URL
+    id_str = request.args.get("id", None)
+    if not id_str:
+        return redirect(url_for("index"))
+
+    id_tarea = int(id_str)
+    gestor.eliminar_tarea(id_tarea)
+    return redirect(url_for("index"))
