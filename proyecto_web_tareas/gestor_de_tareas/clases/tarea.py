@@ -21,4 +21,4 @@ class Tarea:
 
 class TareaImportante(Tarea):
     def mostrar_alerta(self) -> str:
-        return f"⚠️ ¡Tarea urgente!: {self.titulo.upper()}"
+        return f" ¡Tarea urgente!: {self.titulo.upper()}"
