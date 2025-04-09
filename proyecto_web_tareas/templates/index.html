@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestor de Tareas</title>
+    <!-- Bootstrap CSS vía CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-MD6bBk6jMJzqz1HlbG+FkA2BjN2pdiY2kOqf2aCW4nNSQlJfHuSCtg/X7+Rl5IvF" crossorigin="anonymous">
+</head>
+<body>
+<div class="container mt-4">
+    <h1 class="mb-4">Gestor de Tareas</h1>
+    <form action="/crear" method="post" class="mb-3">
+        <input type="text" name="titulo" class="form-control" placeholder="Título de la tarea">
+        <button type="submit" class="btn btn-primary mt-2">Crear Tarea</button>
+    </form>
+    <h2>Tareas</h2>
+    <ul class="list-group">
+        {% for tarea in tareas %}
+            <li class="list-group-item">{{ tarea }}</li>
+        {% endfor %}
+    </ul>
+</div>
+<!-- Bootstrap JS y dependencias -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-LtrjvnR4/JrqWmkHgfOoXwRAIpDIlI+nePUzh2+1FD7/jd6Gsab3m/j4ycKGK5mZ" crossorigin="anonymous"></script>
+</body>
+</html>
