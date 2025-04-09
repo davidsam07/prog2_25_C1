@@ -3,63 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <title>Gestión de Tareas</title>
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet"
-          href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap 5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .tarea-card {
+            margin-bottom: 20px;
+        }
+        .titulo-pagina {
+            margin-top: 30px;
+            text-align: center;
+        }
+        .imagen-hero {
+            width: 100%;
+            border-radius: 12px;
+            max-height: 300px;
+            object-fit: cover;
+            margin: 20px 0;
+        }
+    </style>
 </head>
 <body>
-<div class="container mt-4">
-    <h1>Gestión de Tareas</h1>
 
-    <!-- Formulario para crear tarea -->
-    <form method="post" action="/crear" class="form-inline mb-3">
-        <input type="text" name="titulo" class="form-control mr-2" placeholder="Título" required>
-        <input type="text" name="descripcion" class="form-control mr-2" placeholder="Descripción">
-        <input type="text" name="fecha" class="form-control mr-2" placeholder="YYYY-MM-DD" value="2025-05-30">
-        <select name="prioridad" class="form-control mr-2">
-            <option value="1">Alta</option>
-            <option value="2" selected>Media</option>
-            <option value="3">Baja</option>
-        </select>
-        <input type="text" name="usuario" class="form-control mr-2" placeholder="Usuario asignado">
-        <button type="submit" class="btn btn-primary">Crear</button>
-    </form>
+<div class="container">
+    <h1 class="titulo-pagina">📝 Gestión de Tareas</h1>
 
-    <!-- Botón para ver filtradas o modificadas -->
-    <a href="/filtrar?estado=pendiente" class="btn btn-sm btn-info mb-2">Ver Pendientes</a>
-    <a href="/filtrar?estado=en_progreso" class="btn btn-sm btn-info mb-2">Ver En Progreso</a>
-    <a href="/filtrar?estado=completada" class="btn btn-sm btn-info mb-2">Ver Completadas</a>
+    <!-- Imagen decorativa -->
+    <img src="{{ url_for('static', filename='img/equipo.jpg') }}" alt="Trabajo en equipo" class="imagen-hero">
+
+    <!-- Botón para crear tarea -->
+    <div class="text-end mb-4">
+        <a href="/crear" class="btn btn-success">➕ Crear nueva tarea</a>
+    </div>
 
     <!-- Lista de tareas -->
-    <ul class="list-group">
-    {% for t in tareas %}
-      <li class="list-group-item">
-        <strong>{{ t.id_tarea }}:</strong> {{ t }}
-        <br/>
-        {% if t.usuario_asignado %}
-          <em>Asignada a: {{ t.usuario_asignado }}</em>
-        {% endif %}
-        <br/>
-        <a href="/cambiar_estado?id={{ t.id_tarea }}&estado=en_progreso" class="btn btn-sm btn-warning">En Progreso</a>
-        <a href="/cambiar_estado?id={{ t.id_tarea }}&estado=completada" class="btn btn-sm btn-success">Completar</a>
-        <a href="/modificar?id={{ t.id_tarea }}" class="btn btn-sm btn-secondary">Modificar</a>
-        <a href="/asignar?id={{ t.id_tarea }}&usuario=David" class="btn btn-sm btn-info">Asignar a David</a>
-      </li>
-    {% endfor %}
-    </ul>
+    <div class="row">
+        {% for tarea in tareas %}
+            <div class="col-md-4">
+                <div class="card tarea-card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ tarea.titulo }}</h5>
+                        <p class="card-text">{{ tarea.descripcion }}</p>
+                        <p><strong>Fecha:</strong> {{ tarea.fecha }}</p>
+                        <p><strong>Prioridad:</strong> {{ tarea.prioridad }}</p>
+                        <p><strong>Estado:</strong> {{ tarea.estado }}</p>
+                        {% if tarea.usuario_asignado %}
+                            <p><strong>Asignada a:</strong> {{ tarea.usuario_asignado }}</p>
+                        {% endif %}
+                        <div class="d-flex justify-content-between">
+                            <a href="/modificar?id={{ tarea.id }}" class="btn btn-primary btn-sm">Modificar</a>
+                            <a href="/cambiar_estado?id={{ tarea.id }}&estado=completada" class="btn btn-warning btn-sm">Completar</a>
+                            <a href="/asignar?id={{ tarea.id }}&usuario=David" class="btn btn-info btn-sm text-white">Asignar a David</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 </div>
+
 </body>
 </html>
-<li class="list-group-item">
-  <strong>{{ t.id_tarea }}:</strong> {{ t }}
-  <br>
-  <em>Asignada a: {{ t.usuario_asignado }}</em>
-  <br>
-  <a href="/cambiar_estado?id={{ t.id_tarea }}&estado=en_progreso" class="btn btn-sm btn-warning">En Progreso</a>
-  <a href="/cambiar_estado?id={{ t.id_tarea }}&estado=completada" class="btn btn-sm btn-success">Completar</a>
-  <a href="/modificar?id={{ t.id_tarea }}" class="btn btn-sm btn-secondary">Modificar</a>
-  <a href="/asignar?id={{ t.id_tarea }}&usuario=Maria" class="btn btn-sm btn-info">Asignar a Maria</a>
-
-  <!-- Nuevo botón "Eliminar" -->
-  <a href="/eliminar?id={{ t.id_tarea }}" class="btn btn-sm btn-danger">Eliminar</a>
-</li>
