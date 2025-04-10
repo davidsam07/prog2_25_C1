@@ -33,6 +33,13 @@
 <div class="container">
     <h1 class="titulo-pagina">📝 Gestión de Tareas</h1>
 
+    <!-- Botón para ir a proyectos -->
+    <div class="text-center mb-4">
+        <a href="{{ url_for('ver_proyectos') }}" class="btn btn-outline-primary btn-lg">
+            📁 Ver Proyectos
+        </a>
+    </div>
+
     <!-- Imagen decorativa -->
     <img src="{{ url_for('static', filename='img/trabajo.jpg') }}" alt="Trabajo en equipo" class="imagen-hero">
 
