@@ -1,22 +1,23 @@
-#Documento que hace los proyectos
+from Interfaz_y_Funcionalidades_Avanzadas import Tarea  # Asegúrate de que el nombre del archivo esté bien importado
 
 class Proyecto:
     def __init__(self, nombre):
         self.nombre = nombre
         self.tareas = []
 
-    def agregar_tarea(self, tarea):
+    def agregar_tarea(self, nombre_tarea):
+        tarea = Tarea(nombre_tarea)
         self.tareas.append(tarea)
 
     def listar_tareas(self):
         for i, tarea in enumerate(self.tareas, 1):
-            estado = "✔️" if tarea.completada else "❌"
+            estado = "✔️" if tarea.estado == "Completada" else "❌"
             print(f"{i}. {tarea.nombre} [{estado}]")
 
     def progreso(self):
         if not self.tareas:
             return 0
-        completadas = sum(t.completada for t in self.tareas)
+        completadas = sum(1 for t in self.tareas if t.estado == "Completada")
         return (completadas / len(self.tareas)) * 100
 
 
@@ -38,10 +39,10 @@ class GestorProyectos:
         else:
             print(f"El proyecto '{nombre}' no existe.")
 
-    def agregar_tarea_a_proyecto(self, nombre_proyecto, tarea):
+    def agregar_tarea_a_proyecto(self, nombre_proyecto, nombre_tarea):
         if nombre_proyecto in self.proyectos:
-            self.proyectos[nombre_proyecto].agregar_tarea(tarea)
-            print(f"Tarea '{tarea.nombre}' añadida a '{nombre_proyecto}'.")
+            self.proyectos[nombre_proyecto].agregar_tarea(nombre_tarea)
+            print(f"Tarea '{nombre_tarea}' añadida a '{nombre_proyecto}'.")
         else:
             print(f"Proyecto '{nombre_proyecto}' no encontrado.")
 

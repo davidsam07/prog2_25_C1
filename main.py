@@ -1,4 +1,7 @@
 import requests
+from proyectos import GestorProyectos  # Asegúrate de que el archivo esté nombrado correctamente
+
+
 
 # URL base de la API
 BASE_URL = "http://127.0.0.1:5000"  # Asegúrate de que tu servidor Flask esté en funcionamiento
@@ -76,8 +79,11 @@ def delete_task(token):
     print(respuesta.text)
 
 
+
 def main():
     print("Bienvenido al sistema de gestión de tareas colaborativas.")
+
+    gestor_proyectos = GestorProyectos()
 
     # Menú de opciones
     while True:
@@ -89,6 +95,12 @@ def main():
         print("5. Actualizar tarea")
         print("6. Eliminar tarea")
         print("7. Salir")
+        print("8. Crear proyecto")
+        print("9. Ver proyectos")
+        print("10. Asignar tarea a proyecto")
+        print("11. Ver tareas de un proyecto")
+        print("12. Ver progreso de un proyecto")
+
 
         op = input("Seleccione una opción (1-7): ")
 
@@ -107,6 +119,17 @@ def main():
         elif op == '7':
             print("Saliendo del programa...")
             break
+        elif op == '8' and 'token' in locals():
+            crear_proyecto(token)
+        elif op == '9' and 'token' in locals():
+            ver_proyectos(token)
+        elif op == '10' and 'token' in locals():
+            asignar_tarea_a_proyecto(token)
+        elif op == '11' and 'token' in locals():
+            ver_tareas_de_proyecto(token)
+        elif op == '12' and 'token' in locals():
+            ver_progreso(token)
+
         else:
             print("Por favor, inicie sesión primero.")
 
