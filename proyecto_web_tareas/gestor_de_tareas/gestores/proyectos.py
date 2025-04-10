@@ -1,24 +1,23 @@
-#Documento que hace los proyectos
+from gestor_de_tareas.clases.tarea import Tarea, EstadoTarea
 
 class Proyecto:
     def __init__(self, nombre):
         self.nombre = nombre
         self.tareas = []
 
-    def agregar_tarea(self, tarea):
+    def agregar_tarea(self, tarea: Tarea):
         self.tareas.append(tarea)
 
     def listar_tareas(self):
         for i, tarea in enumerate(self.tareas, 1):
-            estado = "✔️" if tarea.completada else "❌"
-            print(f"{i}. {tarea.nombre} [{estado}]")
+            estado = "✔️" if tarea.estado == EstadoTarea.COMPLETADA else "❌"
+            print(f"{i}. {tarea.titulo} [{estado}]")
 
     def progreso(self):
         if not self.tareas:
             return 0
-        completadas = sum(t.completada for t in self.tareas)
+        completadas = sum(1 for t in self.tareas if t.estado == EstadoTarea.COMPLETADA)
         return (completadas / len(self.tareas)) * 100
-
 
 class GestorProyectos:
     def __init__(self):
@@ -38,10 +37,10 @@ class GestorProyectos:
         else:
             print(f"El proyecto '{nombre}' no existe.")
 
-    def agregar_tarea_a_proyecto(self, nombre_proyecto, tarea):
+    def agregar_tarea_a_proyecto(self, nombre_proyecto, nombre_tarea):
         if nombre_proyecto in self.proyectos:
-            self.proyectos[nombre_proyecto].agregar_tarea(tarea)
-            print(f"Tarea '{tarea.nombre}' añadida a '{nombre_proyecto}'.")
+            self.proyectos[nombre_proyecto].agregar_tarea(nombre_tarea)
+            print(f"Tarea '{nombre_tarea}' añadida a '{nombre_proyecto}'.")
         else:
             print(f"Proyecto '{nombre_proyecto}' no encontrado.")
 

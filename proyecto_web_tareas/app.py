@@ -2,10 +2,13 @@ from flask import Flask, render_template, request, redirect, url_for
 
 from gestor_de_tareas.gestores.gestor_tareas import GestorDeTareas
 from gestor_de_tareas.clases.tarea import EstadoTarea
+from gestor_de_tareas.gestores.proyectos import GestorProyectos
 
 
 app = Flask(__name__)
 gestor = GestorDeTareas()
+proyectos = {}  
+gestor_proyectos = GestorProyectos()
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -109,6 +112,52 @@ def eliminar():
     return redirect(url_for("index"))
 
 
+@app.route("/proyectos")
+def ver_proyectos():
+    proyectos = gestor_proyectos.proyectos
+    return render_template("proyectos.html", proyectos=proyectos)
+
+
+@app.route("/proyectos/crear", methods=["POST"])
+def crear_proyecto():
+    nombre = request.form.get("nombre")
+    if nombre:
+        gestor_proyectos.crear_proyecto(nombre)
+    return redirect(url_for("ver_proyectos"))
+
+
+@app.route("/proyectos/asignar", methods=["POST"])
+def asignar_tarea_a_proyecto():
+    id_tarea = int(request.form.get("id_tarea"))
+    nombre_proyecto = request.form.get("nombre_proyecto")
+
+    tarea = gestor.obtener_por_id(id_tarea)
+    if tarea and nombre_proyecto in gestor_proyectos.proyectos:
+        gestor_proyectos.agregar_tarea_a_proyecto(nombre_proyecto, tarea)
+
+    return redirect(url_for("ver_proyectos"))
+
+
+
+@app.route("/proyectos/<nombre>/tareas")
+def tareas_de_proyecto(nombre):
+    proyecto = gestor_proyectos.proyectos.get(nombre)
+    if not proyecto:
+        return redirect(url_for("ver_proyectos"))
+    tareas = proyecto.tareas
+    return render_template("tareas_proyecto.html", nombre=proyecto.nombre, tareas=tareas)
+
+
+
+@app.route("/proyectos/<nombre>/progreso")
+def progreso_de_proyecto(nombre):
+    proyecto = gestor_proyectos.proyectos.get(nombre)
+    if not proyecto:
+        return redirect(url_for("ver_proyectos"))
+    progreso = proyecto.progreso()
+    return render_template("progreso.html", nombre=nombre, progreso=progreso)
+
+
+
 if __name__ == "__main__":
     app.run(debug=True)
-

@@ -91,18 +91,15 @@ def create_tarea():
 @app.route('/tareas/<tarea_id>', methods=['PUT'])
 @jwt_required()
 def update_tarea(tarea_id):
-    usuario_actual = get_jwt_identity()  # Obtener el usuario actual
+    usuario_actual = get_jwt_identity()
     tarea = tareas.get(tarea_id)
 
     if tarea and tarea['user'] == usuario_actual:
-        tarea_name = request.args.get('name', tarea['name'])
-        tarea_description = request.args.get('description', tarea['description'])
-
-        tarea['name'] = tarea_name
-        tarea['description'] = tarea_description
+        tarea['name'] = request.args.get('name', tarea['name'])
+        tarea['description'] = request.args.get('description', tarea['description'])
+        tarea['estado'] = request.args.get('estado', tarea.get('estado', EstadoTarea.PENDIENTE.value))
         return f'Tarea {tarea_id} actualizada', 200
-    else:
-        return 'Tarea no encontrada o no tienes permiso', 404
+    return 'Tarea no encontrada o no tienes permiso', 404
 
 
 # Eliminar una tarea (requiere autenticación JWT)
@@ -121,3 +118,87 @@ def delete_tarea(tarea_id):
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+@app.route('/proyectos', methods=['POST'])
+@jwt_required()
+def crear_proyecto():
+    usuario = get_jwt_identity()
+    nombre = request.args.get('nombre')
+
+    if not nombre:
+        return 'Nombre del proyecto requerido', 400
+
+    if usuario not in proyectos:
+        proyectos[usuario] = {}
+
+    if nombre in proyectos[usuario]:
+        return 'El proyecto ya existe', 409
+
+    proyectos[usuario][nombre] = {"tareas": []}
+    return f"Proyecto '{nombre}' creado para {usuario}", 201
+
+
+@app.route('/proyectos', methods=['GET'])
+@jwt_required()
+def listar_proyectos():
+    usuario = get_jwt_identity()
+    return proyectos.get(usuario, {}), 200
+
+
+@app.route('/proyectos/<nombre>/tareas', methods=['POST'])
+@jwt_required()
+def asignar_tarea_a_proyecto(nombre):
+    usuario = get_jwt_identity()
+    tarea_id = request.args.get('id')
+
+    if not tarea_id or tarea_id not in tareas:
+        return 'Tarea inválida o no encontrada', 404
+
+    if tareas[tarea_id]['user'] != usuario:
+        return 'No tienes permiso para esa tarea', 403
+
+    if usuario not in proyectos or nombre not in proyectos[usuario]:
+        return 'Proyecto no encontrado', 404
+
+    if tarea_id not in proyectos[usuario][nombre]["tareas"]:
+        proyectos[usuario][nombre]["tareas"].append(tarea_id)
+
+    return f"Tarea {tarea_id} asignada al proyecto '{nombre}'", 200
+
+
+@app.route('/proyectos/<nombre>/tareas', methods=['GET'])
+@jwt_required()
+def tareas_de_proyecto(nombre):
+    usuario = get_jwt_identity()
+
+    if usuario not in proyectos or nombre not in proyectos[usuario]:
+        return 'Proyecto no encontrado', 404
+
+    ids = proyectos[usuario][nombre]["tareas"]
+    tareas_proyecto = {}
+    for i in ids:
+        if i in tareas:
+            tarea = tareas[i]
+            tareas_proyecto[i] = {
+                'name': tarea['name'],
+                'description': tarea.get('description', ''),
+                'estado': tarea.get('estado', 'Pendiente')
+            }
+    return tareas_proyecto, 200
+
+@app.route('/proyectos/<nombre>/progreso', methods=['GET'])
+@jwt_required()
+def progreso_proyecto(nombre):
+    usuario = get_jwt_identity()
+
+    if usuario not in proyectos or nombre not in proyectos[usuario]:
+        return 'Proyecto no encontrado', 404
+
+    ids = proyectos[usuario][nombre]["tareas"]
+    total = len(ids)
+    if total == 0:
+        return {"progreso": 0}, 200
+
+    completadas = sum(1 for i in ids if i in tareas and tareas[i].get('estado') == 'Completada')
+    progreso = (completadas / total) * 100
+    return {"progreso": progreso}, 200
