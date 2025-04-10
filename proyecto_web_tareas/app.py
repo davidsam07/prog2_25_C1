@@ -12,10 +12,15 @@ def index():
     if request.method == "POST":
         titulo = request.form["titulo"]
         descripcion = request.form.get("descripcion", "")
-        fecha = request.form.get("fecha", "2025-05-30")
+        fecha = request.form.get("fecha")  # ← esto está bien
         prioridad = int(request.form.get("prioridad", 2))
         usuario = request.form.get("usuario", None)
-        gestor.crear_tarea(titulo, descripcion, fecha, prioridad, usuario_asignado=usuario)
+
+        # Acá asegurate de pasar la fecha como parámetro
+        gestor.crear_tarea(
+            titulo, descripcion, fecha, prioridad,
+            usuario_asignado=usuario
+        )
         return redirect(url_for("index"))
 
     tareas = gestor.listar_tareas()
