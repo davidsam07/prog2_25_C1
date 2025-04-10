@@ -10,7 +10,7 @@
 
     <style>
         body {
-            background-color: #f8f9fa;
+            background-color: #dfe4ea;
         }
         .tarea-card {
             margin-bottom: 20px;
@@ -18,13 +18,13 @@
         .titulo-pagina {
             margin-top: 30px;
             text-align: center;
+            color: #495057;
         }
-        .imagen-hero {
-            width: 100%;
-            border-radius: 12px;
-            max-height: 300px;
-            object-fit: cover;
-            margin: 20px 0;
+        .btn {
+            border-radius: 8px;
+        }
+        .btn-sm {
+            padding: 5px 12px;
         }
     </style>
 </head>
@@ -44,8 +44,8 @@
     <img src="{{ url_for('static', filename='img/trabajo.jpg') }}" alt="Trabajo en equipo" class="imagen-hero">
 
     <!-- Formulario para crear una nueva tarea -->
-    <div class="card mb-5">
-        <div class="card-body">
+    <div class="card mb-5 shadow-sm">
+        <div class="card-body bg-light">
             <h5 class="card-title">Crear nueva tarea</h5>
             <form method="post" action="/">
                 <div class="row">
@@ -69,7 +69,7 @@
                         <input type="text" class="form-control" name="usuario" placeholder="Usuario asignado">
                     </div>
                     <div class="col-md-4 mb-3">
-                        <button type="submit" class="btn btn-success w-100">Crear</button>
+                        <button type="submit" class="btn btn-outline-success w-100">Crear</button>
                     </div>
                 </div>
             </form>
@@ -80,7 +80,11 @@
     <div class="row">
         {% for tarea in tareas %}
             <div class="col-md-4">
-                <div class="card tarea-card shadow-sm">
+                <div class="card tarea-card shadow-sm
+                    {% if tarea.prioridad == 1 %}bg-danger-subtle
+                    {% elif tarea.prioridad == 2 %}bg-warning-subtle
+                    {% else %}bg-success-subtle
+                    {% endif %}">
                     <div class="card-body">
                         <h5 class="card-title">{{ tarea.titulo }}</h5>
                         <p class="card-text">{{ tarea.descripcion }}</p>
@@ -90,10 +94,10 @@
                         {% if tarea.usuario_asignado %}
                             <p><strong>Asignada a:</strong> {{ tarea.usuario_asignado }}</p>
                         {% endif %}
-                        <div class="d-flex justify-content-between">
-                            <a href="/modificar?id={{ tarea.id_tarea }}" class="btn btn-primary btn-sm">Modificar</a>
-                            <a href="/cambiar_estado?id={{ tarea.id_tarea }}&estado=completada" class="btn btn-warning btn-sm">Completar</a>
-                            <a href="/asignar?id={{ tarea.id_tarea }}&usuario=David" class="btn btn-info btn-sm text-white">Asignar a David</a>
+                        <div class="d-flex justify-content-between mt-3">
+                            <a href="/modificar?id={{ tarea.id_tarea }}" class="btn btn-outline-primary btn-sm">Modificar</a>
+                            <a href="/cambiar_estado?id={{ tarea.id_tarea }}&estado=completada" class="btn btn-outline-warning btn-sm">Completar</a>
+                            <a href="/asignar?id={{ tarea.id_tarea }}&usuario=David" class="btn btn-outline-info btn-sm">Asignar a David</a>
                         </div>
                     </div>
                 </div>
