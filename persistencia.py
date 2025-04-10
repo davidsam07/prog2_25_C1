@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+
 """
 Módulo de Persistencia de Datos
 
