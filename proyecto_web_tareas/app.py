@@ -110,10 +110,6 @@ def eliminar():
     return redirect(url_for("index"))
 
 
-if __name__ == "__main__":
-    app.run(debug=True)
-
-
 @app.route("/proyectos")
 def ver_proyectos():
     proyectos = gestor_proyectos.proyectos
@@ -157,3 +153,8 @@ def progreso_de_proyecto(nombre):
         return redirect(url_for("ver_proyectos"))
     progreso = proyecto.progreso()
     return render_template("progreso.html", nombre=nombre, progreso=progreso)
+
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
