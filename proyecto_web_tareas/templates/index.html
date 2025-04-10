@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <!-- Metadatos y configuración básica -->
     <meta charset="UTF-8">
     <title>Gestión de Tareas</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Bootstrap 5 CDN -->
+    <!-- Bootstrap 5 CDN: Provee estilos responsivos y modernos -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
+    <!-- Estilos personalizados para el proyecto -->
     <style>
         body {
             background-color: #f8f9fa;
@@ -29,35 +31,40 @@
     </style>
 </head>
 <body>
-
 <div class="container">
+    <!-- Título principal de la página -->
     <h1 class="titulo-pagina">📝 Gestión de Tareas</h1>
 
-    <!-- Botón para ir a proyectos -->
+    <!-- Botón para ir a la sección de proyectos -->
     <div class="text-center mb-4">
         <a href="{{ url_for('ver_proyectos') }}" class="btn btn-outline-primary btn-lg">
             📁 Ver Proyectos
         </a>
     </div>
 
-    <!-- Imagen decorativa -->
+    <!-- Imagen decorativa (se extrae desde la carpeta 'static/img') -->
     <img src="{{ url_for('static', filename='img/trabajo.jpg') }}" alt="Trabajo en equipo" class="imagen-hero">
 
-    <!-- Formulario para crear una nueva tarea -->
+    <!-- Card con formulario para crear una nueva tarea -->
     <div class="card mb-5">
         <div class="card-body">
             <h5 class="card-title">Crear nueva tarea</h5>
+            <!-- El formulario envía los datos al endpoint "/" con método POST -->
             <form method="post" action="/">
                 <div class="row">
+                    <!-- Campo para el título de la tarea -->
                     <div class="col-md-4 mb-3">
                         <input type="text" class="form-control" name="titulo" placeholder="Título" required>
                     </div>
+                    <!-- Campo para la descripción de la tarea -->
                     <div class="col-md-4 mb-3">
                         <input type="text" class="form-control" name="descripcion" placeholder="Descripción">
                     </div>
+                    <!-- Campo para seleccionar la fecha límite (con selector de fecha) -->
                     <div class="col-md-4 mb-3">
                         <input type="date" class="form-control" name="fecha" required>
                     </div>
+                    <!-- Menú desplegable para la prioridad -->
                     <div class="col-md-4 mb-3">
                         <select class="form-select" name="prioridad">
                             <option value="1">Alta</option>
@@ -65,9 +72,11 @@
                             <option value="3">Baja</option>
                         </select>
                     </div>
+                    <!-- Campo para el usuario asignado -->
                     <div class="col-md-4 mb-3">
                         <input type="text" class="form-control" name="usuario" placeholder="Usuario asignado">
                     </div>
+                    <!-- Botón de envío para crear la tarea -->
                     <div class="col-md-4 mb-3">
                         <button type="submit" class="btn btn-success w-100">Crear</button>
                     </div>
@@ -82,25 +91,29 @@
             <div class="col-md-4">
                 <div class="card tarea-card shadow-sm">
                     <div class="card-body">
+                        <!-- Título y descripción de la tarea -->
                         <h5 class="card-title">{{ tarea.titulo }}</h5>
                         <p class="card-text">{{ tarea.descripcion }}</p>
+                        <!-- Mostrar información adicional: fecha, prioridad y estado -->
                         <p><strong>Fecha:</strong> {{ tarea.fecha_limite }}</p>
                         <p><strong>Prioridad:</strong> {{ tarea.prioridad }}</p>
                         <p><strong>Estado:</strong> {{ tarea.estado }}</p>
+                        <!-- Si la tarea tiene usuario asignado, se muestra -->
                         {% if tarea.usuario_asignado %}
                             <p><strong>Asignada a:</strong> {{ tarea.usuario_asignado }}</p>
                         {% endif %}
+                        <!-- Conjunto de botones para acciones sobre la tarea -->
                         <div class="d-flex justify-content-between">
                             <a href="/modificar?id={{ tarea.id_tarea }}" class="btn btn-primary btn-sm">Modificar</a>
                             <a href="/cambiar_estado?id={{ tarea.id_tarea }}&estado=completada" class="btn btn-warning btn-sm">Completar</a>
                             <a href="/asignar?id={{ tarea.id_tarea }}&usuario=David" class="btn btn-info btn-sm text-white">Asignar a David</a>
                         </div>
+                        <!-- Aquí podrías agregar más acciones, por ejemplo, eliminar tarea -->
                     </div>
                 </div>
             </div>
         {% endfor %}
     </div>
 </div>
-
 </body>
 </html>
