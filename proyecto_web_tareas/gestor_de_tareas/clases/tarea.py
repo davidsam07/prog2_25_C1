@@ -3,14 +3,11 @@ from datetime import date
 from typing import Optional, List
 
 class EstadoTarea(Enum):
-    PENDIENTE = "pendiente"
-    EN_PROGRESO = "en progreso"
-    COMPLETADA = "completada"
+    PENDIENTE = "Pendiente"
+    EN_PROGRESO = "En progreso"
+    COMPLETADA = "Completada"
 
 class Tarea:
-    """
-    Clase que representa una tarea con usuario asignado y estado.
-    """
     def __init__(self,
                  id_tarea: int,
                  titulo: str,
@@ -24,13 +21,18 @@ class Tarea:
         self.descripcion = descripcion
         self.fecha_limite = fecha_limite
         self.estado = EstadoTarea.PENDIENTE
-        self.prioridad = prioridad  # 1 = Alta, 2 = Media, 3 = Baja
+        self.prioridad = prioridad
         self.etiquetas = etiquetas if etiquetas else []
         self.usuario_asignado = usuario_asignado
-        # Ejemplo: "Juan", "Maria", etc. Podrías también usar un objeto Usuario.
 
     def cambiar_estado(self, nuevo_estado: EstadoTarea):
         self.estado = nuevo_estado
+
+    def completar(self):
+        self.estado = EstadoTarea.COMPLETADA
+
+    def __str__(self):
+        return f"{self.titulo} [{self.estado.value}]"
 
     def asignar_usuario(self, usuario: str):
         self.usuario_asignado = usuario

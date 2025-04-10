@@ -1,42 +1,42 @@
 from datetime import datetime
 from typing import List, Optional
 from gestor_de_tareas.clases.tarea import Tarea, EstadoTarea
-from gestor_de_tareas.utilidades.decoradores import log_funcion
+from gestor_de_tareas.utilidades.decoradores import log_funcion  # Mantener import original
 
 class GestorDeTareas:
     def __init__(self):
         self.tareas: List[Tarea] = []
-        self.contador_id = 1  # Para asignar IDs únicos a cada tarea
+        self.contador_id = 1
 
-    @log_funcion
-    def crear_tarea(self,
-                    titulo: str,
-                    descripcion: str,
-                    fecha_limite_str: str,
-                    prioridad: int,
-                    etiquetas=None,
-                    usuario_asignado=None) -> Optional[Tarea]:
-        """
-        Crea una nueva tarea y la añade a la lista.
-        """
+    @log_funcion  # Mantener decorador original
+    def crear_tarea(self, titulo: str, descripcion: str = "",
+                   fecha_limite_str: str = None, prioridad: int = 2,
+                   etiquetas=None, usuario_asignado=None) -> Optional[Tarea]:
         try:
-            fecha = datetime.strptime(fecha_limite_str, "%Y-%m-%d").date()
+            fecha = datetime.strptime(fecha_limite_str, "%Y-%m-%d").date() if fecha_limite_str else None
+            tarea = Tarea(
+                id_tarea=self.contador_id,
+                titulo=titulo,
+                descripcion=descripcion,
+                fecha_limite=fecha,
+                prioridad=prioridad,
+                etiquetas=etiquetas,
+                usuario_asignado=usuario_asignado
+            )
+            self.tareas.append(tarea)
+            self.contador_id += 1
+            return tarea
         except ValueError:
             print("[ERROR] Fecha mal formateada. Usa YYYY-MM-DD.")
             return None
-        tarea = Tarea(
-            id_tarea=self.contador_id,
-            titulo=titulo,
-            descripcion=descripcion,
-            fecha_limite=fecha,
-            prioridad=prioridad,
-            etiquetas=etiquetas,
-            usuario_asignado=usuario_asignado
-        )
-        self.tareas.append(tarea)
-        self.contador_id += 1
-        return tarea
 
+    def marcar_completada(self, id_tarea: int) -> bool:
+        tarea = next((t for t in self.tareas if t.id_tarea == id_tarea), None)
+        if tarea:
+            tarea.completar()
+            return True
+        return False
+    
     @log_funcion
     def listar_tareas(self) -> List[Tarea]:
         return self.tareas

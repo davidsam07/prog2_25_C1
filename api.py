@@ -91,18 +91,15 @@ def create_tarea():
 @app.route('/tareas/<tarea_id>', methods=['PUT'])
 @jwt_required()
 def update_tarea(tarea_id):
-    usuario_actual = get_jwt_identity()  # Obtener el usuario actual
+    usuario_actual = get_jwt_identity()
     tarea = tareas.get(tarea_id)
 
     if tarea and tarea['user'] == usuario_actual:
-        tarea_name = request.args.get('name', tarea['name'])
-        tarea_description = request.args.get('description', tarea['description'])
-
-        tarea['name'] = tarea_name
-        tarea['description'] = tarea_description
+        tarea['name'] = request.args.get('name', tarea['name'])
+        tarea['description'] = request.args.get('description', tarea['description'])
+        tarea['estado'] = request.args.get('estado', tarea.get('estado', EstadoTarea.PENDIENTE.value))
         return f'Tarea {tarea_id} actualizada', 200
-    else:
-        return 'Tarea no encontrada o no tienes permiso', 404
+    return 'Tarea no encontrada o no tienes permiso', 404
 
 
 # Eliminar una tarea (requiere autenticación JWT)
@@ -178,9 +175,16 @@ def tareas_de_proyecto(nombre):
         return 'Proyecto no encontrado', 404
 
     ids = proyectos[usuario][nombre]["tareas"]
-    tareas_proyecto = {i: tareas[i] for i in ids if i in tareas}
+    tareas_proyecto = {}
+    for i in ids:
+        if i in tareas:
+            tarea = tareas[i]
+            tareas_proyecto[i] = {
+                'name': tarea['name'],
+                'description': tarea.get('description', ''),
+                'estado': tarea.get('estado', 'Pendiente')
+            }
     return tareas_proyecto, 200
-
 
 @app.route('/proyectos/<nombre>/progreso', methods=['GET'])
 @jwt_required()

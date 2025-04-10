@@ -145,7 +145,8 @@ def tareas_de_proyecto(nombre):
     if not proyecto:
         return redirect(url_for("ver_proyectos"))
     tareas = proyecto.tareas
-    return render_template("tareas_proyecto.html", nombre=nombre, tareas=tareas)
+    return render_template("tareas_proyecto.html", nombre=proyecto.nombre, tareas=tareas)
+
 
 
 @app.route("/proyectos/<nombre>/progreso")

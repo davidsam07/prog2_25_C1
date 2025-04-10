@@ -1,29 +1,23 @@
-import sys
-import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))
-
-from Interfaz_y_Funcionalidades_Avanzadas import Tarea
+from gestor_de_tareas.clases.tarea import Tarea, EstadoTarea
 
 class Proyecto:
     def __init__(self, nombre):
         self.nombre = nombre
         self.tareas = []
 
-    def agregar_tarea(self, nombre_tarea):
-        tarea = Tarea(nombre_tarea)
+    def agregar_tarea(self, tarea: Tarea):
         self.tareas.append(tarea)
 
     def listar_tareas(self):
         for i, tarea in enumerate(self.tareas, 1):
-            estado = "✔️" if tarea.estado == "Completada" else "❌"
-            print(f"{i}. {tarea.nombre} [{estado}]")
+            estado = "✔️" if tarea.estado == EstadoTarea.COMPLETADA else "❌"
+            print(f"{i}. {tarea.titulo} [{estado}]")
 
     def progreso(self):
         if not self.tareas:
             return 0
-        completadas = sum(1 for t in self.tareas if t.estado == "Completada")
+        completadas = sum(1 for t in self.tareas if t.estado == EstadoTarea.COMPLETADA)
         return (completadas / len(self.tareas)) * 100
-
 
 class GestorProyectos:
     def __init__(self):
