@@ -1,4 +1,8 @@
-from Interfaz_y_Funcionalidades_Avanzadas import Tarea  # Asegúrate de que el nombre del archivo esté bien importado
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))
+
+from Interfaz_y_Funcionalidades_Avanzadas import Tarea
 
 class Proyecto:
     def __init__(self, nombre):
