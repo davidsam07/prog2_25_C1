@@ -3,35 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <title>Proyectos</title>
+    <!-- Incluye Bootstrap desde el CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            margin-top: 30px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Gestión de Proyectos</h1>
 
-    <form action="/proyectos/crear" method="post">
-        <input type="text" name="nombre" placeholder="Nombre del proyecto" required>
-        <button type="submit">Crear Proyecto</button>
-    </form>
+<div class="container">
+    <h1 class="text-center mb-4">Gestión de Proyectos</h1>
 
-    <h2>Asignar tarea a proyecto</h2>
-    <form action="/proyectos/asignar" method="post">
-        <input type="number" name="id_tarea" placeholder="ID de tarea" required>
-        <input type="text" name="nombre_proyecto" placeholder="Nombre del proyecto" required>
-        <button type="submit">Asignar</button>
-    </form>
+    <!-- Formulario para crear proyecto -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Crear nuevo proyecto</h5>
+            <form action="/proyectos/crear" method="post">
+                <div class="mb-3">
+                    <input type="text" name="nombre" class="form-control" placeholder="Nombre del proyecto" required>
+                </div>
+                <button type="submit" class="btn btn-success w-100">Crear Proyecto</button>
+            </form>
+        </div>
+    </div>
 
+    <!-- Formulario para asignar tarea a proyecto -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Asignar tarea a proyecto</h5>
+            <form action="/proyectos/asignar" method="post">
+                <div class="mb-3">
+                    <input type="number" name="id_tarea" class="form-control" placeholder="ID de tarea" required>
+                </div>
+                <div class="mb-3">
+                    <input type="text" name="nombre_proyecto" class="form-control" placeholder="Nombre del proyecto" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Asignar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Proyectos existentes -->
     <hr>
-    <h2>Proyectos existentes</h2>
-    <ul>
+    <h2 class="text-center">Proyectos existentes</h2>
+    <ul class="list-group">
         {% for nombre, proyecto in proyectos.items() %}
-            <li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
                 <strong>{{ nombre }}</strong> ({{ proyecto.tareas|length }} tareas)
-                <br>
-                <a href="{{ url_for('tareas_de_proyecto', nombre=nombre) }}">Ver tareas</a> |
-                <a href="{{ url_for('progreso_de_proyecto', nombre=nombre) }}">Ver progreso</a>
+                <div>
+                    <a href="{{ url_for('tareas_de_proyecto', nombre=nombre) }}" class="btn btn-outline-primary btn-sm">Ver tareas</a>
+                    <a href="{{ url_for('progreso_de_proyecto', nombre=nombre) }}" class="btn btn-outline-secondary btn-sm">Ver progreso</a>
+                </div>
             </li>
         {% endfor %}
     </ul>
 
-    <p><a href="{{ url_for('index') }}">⬅ Volver a inicio</a></p>
+    <p class="text-center mt-4">
+        <a href="{{ url_for('index') }}" class="btn btn-link">⬅ Volver a inicio</a>
+    </p>
+</div>
+
+<!-- Include Bootstrap's JS (optional but recommended) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
