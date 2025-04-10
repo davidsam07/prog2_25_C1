@@ -1,38 +1,52 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <!-- Metaetiquetas para codificación y título -->
     <meta charset="UTF-8">
     <title>Modificar Tarea</title>
+    <!-- Vinculación de Bootstrap 4.5.2 para estilos -->
     <link rel="stylesheet"
           href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
 <div class="container mt-4">
+    <!-- Título de la página que muestra el ID de la tarea a modificar -->
     <h1>Modificar Tarea #{{ tarea.id_tarea }}</h1>
+
+    <!-- Formulario para modificar los datos de la tarea -->
+    <!-- La acción del formulario envía los datos vía POST a la ruta /modificar con el parámetro id de la tarea -->
     <form method="post" action="/modificar?id={{ tarea.id_tarea }}">
+        <!-- Sección del Título -->
         <div class="form-group">
             <label>Título</label>
             <input type="text" name="titulo" class="form-control" value="{{ tarea.titulo }}">
         </div>
+        <!-- Sección de Descripción -->
         <div class="form-group">
             <label>Descripción</label>
             <input type="text" name="descripcion" class="form-control" value="{{ tarea.descripcion }}">
         </div>
+        <!-- Sección de Fecha Límite -->
         <div class="form-group">
             <label>Fecha Límite (YYYY-MM-DD)</label>
             <input type="text" name="fecha" class="form-control" value="{{ tarea.fecha_limite }}">
         </div>
+        <!-- Sección de Prioridad -->
         <div class="form-group">
             <label>Prioridad</label>
             <select name="prioridad" class="form-control">
+                <!-- Se selecciona la opción correspondiente según el valor de prioridad de la tarea -->
                 <option value="1" {% if tarea.prioridad == 1 %}selected{% endif %}>Alta</option>
                 <option value="2" {% if tarea.prioridad == 2 %}selected{% endif %}>Media</option>
                 <option value="3" {% if tarea.prioridad == 3 %}selected{% endif %}>Baja</option>
             </select>
         </div>
+        <!-- Botón para enviar los cambios -->
         <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+        <!-- Botón para cancelar la operación y regresar al inicio -->
         <a href="/" class="btn btn-secondary">Cancelar</a>
     </form>
 </div>
 </body>
 </html>
+
