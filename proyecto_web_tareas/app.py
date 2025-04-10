@@ -114,78 +114,46 @@ if __name__ == "__main__":
     app.run(debug=True)
 
 
-@app.route('/proyectos', methods=['POST'])
+@app.route("/proyectos")
+def ver_proyectos():
+    proyectos = gestor_proyectos.proyectos
+    return render_template("proyectos.html", proyectos=proyectos)
+
+
+@app.route("/proyectos/crear", methods=["POST"])
 def crear_proyecto():
-    usuario = get_jwt_identity()
-    nombre = request.args.get('nombre')
-
-    if not nombre:
-        return 'Nombre del proyecto requerido', 400
-
-    if usuario not in proyectos:
-        proyectos[usuario] = {}
-
-    if nombre in proyectos[usuario]:
-        return 'El proyecto ya existe', 409
-
-    proyectos[usuario][nombre] = {"tareas": []}
-    return f"Proyecto '{nombre}' creado para {usuario}", 201
+    nombre = request.form.get("nombre")
+    if nombre:
+        gestor_proyectos.crear_proyecto(nombre)
+    return redirect(url_for("ver_proyectos"))
 
 
+@app.route("/proyectos/asignar", methods=["POST"])
+def asignar_tarea_a_proyecto():
+    id_tarea = int(request.form.get("id_tarea"))
+    nombre_proyecto = request.form.get("nombre_proyecto")
 
-@app.route('/proyectos', methods=['GET'])
-def listar_proyectos():
-    usuario = get_jwt_identity()
-    return proyectos.get(usuario, {}), 200
+    tarea = gestor.obtener_por_id(id_tarea)
+    if tarea and nombre_proyecto in gestor_proyectos.proyectos:
+        gestor_proyectos.agregar_tarea_a_proyecto(nombre_proyecto, tarea)
+
+    return redirect(url_for("ver_proyectos"))
 
 
 
-@app.route('/proyectos/<nombre>/tareas', methods=['POST'])
-def asignar_tarea_a_proyecto(nombre):
-    usuario = get_jwt_identity()
-    tarea_id = request.args.get('id')
-
-    if not tarea_id or tarea_id not in tareas:
-        return 'Tarea inválida o no encontrada', 404
-
-    if tareas[tarea_id]['user'] != usuario:
-        return 'No tienes permiso para esa tarea', 403
-
-    if usuario not in proyectos or nombre not in proyectos[usuario]:
-        return 'Proyecto no encontrado', 404
-
-    if tarea_id not in proyectos[usuario][nombre]["tareas"]:
-        proyectos[usuario][nombre]["tareas"].append(tarea_id)
-
-    return f"Tarea {tarea_id} asignada al proyecto '{nombre}'", 200
-
-
-
-@app.route('/proyectos/<nombre>/tareas', methods=['GET'])
+@app.route("/proyectos/<nombre>/tareas")
 def tareas_de_proyecto(nombre):
-    usuario = get_jwt_identity()
-
-    if usuario not in proyectos or nombre not in proyectos[usuario]:
-        return 'Proyecto no encontrado', 404
-
-    ids = proyectos[usuario][nombre]["tareas"]
-    tareas_proyecto = {i: tareas[i] for i in ids if i in tareas}
-    return tareas_proyecto, 200
+    proyecto = gestor_proyectos.proyectos.get(nombre)
+    if not proyecto:
+        return redirect(url_for("ver_proyectos"))
+    tareas = proyecto.tareas
+    return render_template("tareas_proyecto.html", nombre=nombre, tareas=tareas)
 
 
-
-@app.route('/proyectos/<nombre>/progreso', methods=['GET'])
-def progreso_proyecto(nombre):
-    usuario = get_jwt_identity()
-
-    if usuario not in proyectos or nombre not in proyectos[usuario]:
-        return 'Proyecto no encontrado', 404
-
-    ids = proyectos[usuario][nombre]["tareas"]
-    total = len(ids)
-    if total == 0:
-        return {"progreso": 0}, 200
-
-    completadas = sum(1 for i in ids if i in tareas and tareas[i].get('estado') == 'Completada')
-    progreso = (completadas / total) * 100
-    return {"progreso": progreso}, 200
+@app.route("/proyectos/<nombre>/progreso")
+def progreso_de_proyecto(nombre):
+    proyecto = gestor_proyectos.proyectos.get(nombre)
+    if not proyecto:
+        return redirect(url_for("ver_proyectos"))
+    progreso = proyecto.progreso()
+    return render_template("progreso.html", nombre=nombre, progreso=progreso)
