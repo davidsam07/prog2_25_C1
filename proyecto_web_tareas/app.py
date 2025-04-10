@@ -2,11 +2,13 @@ from flask import Flask, render_template, request, redirect, url_for
 
 from gestor_de_tareas.gestores.gestor_tareas import GestorDeTareas
 from gestor_de_tareas.clases.tarea import EstadoTarea
+from gestor_de_tareas.gestores.proyectos import GestorProyectos
 
 
 app = Flask(__name__)
 gestor = GestorDeTareas()
 proyectos = {}  
+gestor_proyectos = GestorProyectos()
 
 @app.route("/", methods=["GET", "POST"])
 def index():
