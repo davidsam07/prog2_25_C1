@@ -84,9 +84,9 @@
                             <p><strong>Asignada a:</strong> {{ tarea.usuario_asignado }}</p>
                         {% endif %}
                         <div class="d-flex justify-content-between">
-                            <a href="/modificar?id={{ tarea.id }}" class="btn btn-primary btn-sm">Modificar</a>
-                            <a href="/cambiar_estado?id={{ tarea.id }}&estado=completada" class="btn btn-warning btn-sm">Completar</a>
-                            <a href="/asignar?id={{ tarea.id }}&usuario=David" class="btn btn-info btn-sm text-white">Asignar a David</a>
+                            <a href="/modificar?id={{ tarea.id_tarea }}" class="btn btn-primary btn-sm">Modificar</a>
+                            <a href="/cambiar_estado?id={{ tarea.id_tarea }}&estado=completada" class="btn btn-warning btn-sm">Completar</a>
+                            <a href="/asignar?id={{ tarea.id_tarea }}&usuario=David" class="btn btn-info btn-sm text-white">Asignar a David</a>
                         </div>
                     </div>
                 </div>
