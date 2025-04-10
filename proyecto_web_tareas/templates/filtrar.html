@@ -1,34 +1,15 @@
-<!--
-    Plantilla: filtrar.html
-    Propósito: Mostrar una lista de tareas filtradas por estado.
-    Se utiliza en la ruta /filtrar de la aplicación Flask.
-
-    Requiere:
-      - Bootstrap 4.5.2 (se carga desde CDN para estilos responsivos y modernos).
-      - El motor de plantillas Jinja2 (integrado en Flask) para iterar sobre la lista de tareas (variable 'tareas').
-
-    Estructura:
-      - Encabezado con título.
-      - Botón para regresar a la página principal.
-      - Lista (ul) de tareas, donde cada tarea se muestra en un elemento li.
--->
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <title>Filtrar Tareas</title>
-    <!-- Vinculación de Bootstrap vía CDN -->
     <link rel="stylesheet"
           href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
 <div class="container mt-4">
-    <!-- Título de la página -->
     <h1>Tareas filtradas</h1>
-    <!-- Botón para volver a la página principal -->
     <a href="/" class="btn btn-sm btn-primary mb-2">Volver al inicio</a>
-
-    <!-- Lista de tareas filtradas -->
     <ul class="list-group">
         {% for t in tareas %}
           <li class="list-group-item">{{ t }}</li>
