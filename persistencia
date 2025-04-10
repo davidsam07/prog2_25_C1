@@ -1,0 +1,78 @@
+"""
+Módulo de Persistencia de Datos
+
+Este módulo guarda y carga los datos de usuarios, tareas y proyectos utilizando el módulo pickle.
+Se utiliza un archivo binario para guardar la configuración o sesión de la aplicación.
+
+Funciones:
+  - guardar_datos: Guarda los datos en un fichero.
+  - cargar_datos: Carga los datos desde un fichero.
+  - cerrar_sesion: Guarda automáticamente los datos al cerrar la aplicación.
+
+NOTA: Este código se ha escrito de forma sencilla para facilitar su comprensión, aun sacrificando algo de rendimiento.
+"""
+
+import pickle
+import atexit
+from typing import Any, List, Tuple
+
+def guardar_datos(usuarios: List[Any], tareas: List[Any], proyectos: List[Any], filename: str = "datos.pkl") -> None:
+    """
+    Guarda los datos de usuarios, tareas y proyectos en un archivo binario usando pickle.
+    
+    Parámetros:
+      usuarios (list): Lista de objetos de usuarios.
+      tareas (list): Lista de objetos de tareas.
+      proyectos (list): Lista de objetos de proyectos.
+      filename (str): Nombre del archivo en el que se guardarán los datos (por defecto "datos.pkl").
+    
+    Retorna:
+      None
+    """
+    try:
+        # Creamos un diccionario con los datos
+        datos = {"usuarios": usuarios, "tareas": tareas, "proyectos": proyectos}
+        with open(filename, "wb") as archivo:
+            pickle.dump(datos, archivo)
+        print("Datos guardados en", filename)
+    except Exception as error:
+        print("Error al guardar los datos:", error)
+
+def cargar_datos(filename: str = "datos.pkl") -> Tuple[List[Any], List[Any], List[Any]]:
+    """
+    Carga los datos de usuarios, tareas y proyectos desde un archivo binario usando pickle.
+    
+    Parámetros:
+      filename (str): Nombre del archivo desde el que se cargarán los datos (por defecto "datos.pkl").
+    
+    Retorna:
+      tuple: Una tupla con tres listas (usuarios, tareas, proyectos). Si el archivo no existe,
+             retorna tres listas vacías.
+    """
+    try:
+        with open(filename, "rb") as archivo:
+            datos = pickle.load(archivo)
+        print("Datos cargados desde", filename)
+        return datos.get("usuarios", []), datos.get("tareas", []), datos.get("proyectos", [])
+    except FileNotFoundError:
+        print("El archivo", filename, "no existe. Se retornan listas vacías.")
+        return ([], [], [])
+    except Exception as error:
+        print("Error al cargar los datos:", error)
+        return ([], [], [])
+
+def cerrar_sesion(usuarios: List[Any], tareas: List[Any], proyectos: List[Any], filename: str = "datos.pkl") -> None:
+    """
+    Guarda automáticamente los datos al cerrar la aplicación.
+    
+    Parámetros:
+      usuarios (list): Lista de objetos de usuarios.
+      tareas (list): Lista de objetos de tareas.
+      proyectos (list): Lista de objetos de proyectos.
+      filename (str): Nombre del archivo donde se guardarán los datos (por defecto "datos.pkl").
+    
+    Retorna:
+      None
+    """
+    guardar_datos(usuarios, tareas, proyectos, filename)
+    print("Cierre de sesión: datos guardados automáticamente.")
